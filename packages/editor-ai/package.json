@@ -1,0 +1,50 @@
+{
+  "name": "@hyperframes/editor-ai",
+  "version": "0.6.64",
+  "description": "AI video-editing layer: analyze raw footage with Gemini, emit a deterministic EDL, and map it to a Hyperframes composition.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heygen-com/hyperframes",
+    "directory": "packages/editor-ai"
+  },
+  "files": [
+    "dist",
+    "config",
+    "README.md"
+  ],
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      }
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@hyperframes/core": "workspace:*",
+    "@types/node": "^25.0.10",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
+  },
+  "optionalDependencies": {
+    "@google/genai": "^1.50.1"
+  }
+}

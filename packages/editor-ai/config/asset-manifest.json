@@ -1,0 +1,14 @@
+{
+  "sfx_whoosh": { "path": "assets/sfx/whoosh.mp3", "type": "sfx", "duration": 0.6 },
+  "sfx_ding": { "path": "assets/sfx/ding.mp3", "type": "sfx", "duration": 0.4 },
+  "sfx_impact": { "path": "assets/sfx/impact.mp3", "type": "sfx", "duration": 0.9 },
+  "sfx_pop": { "path": "assets/sfx/pop.mp3", "type": "sfx", "duration": 0.3 },
+  "sfx_click": { "path": "assets/sfx/click.mp3", "type": "sfx", "duration": 0.2 },
+
+  "marker_circle": { "path": "assets/markers/circle.png", "type": "image", "duration": 0 },
+  "marker_burst": { "path": "assets/markers/burst.png", "type": "image", "duration": 0 },
+  "marker_arrow": { "path": "assets/markers/arrow.png", "type": "image", "duration": 0 },
+
+  "card_glass_light": { "path": "assets/cards/glass-light.png", "type": "image", "duration": 0 },
+  "card_glass_dark": { "path": "assets/cards/glass-dark.png", "type": "image", "duration": 0 }
+}

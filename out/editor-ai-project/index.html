@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=720, height=1280" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 720px; height: 1280px; overflow: hidden; background: #000; }
+      .overlay { color: #fff; font-family: Inter, system-ui, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="39.121"
+      data-width="720"
+      data-height="1280"
+    >
+      <div id="aroll-stage" style="position:absolute;inset:0">
+      <video id="clip0" class="clip" src="raw.mp4" muted playsinline data-start="0" data-media-start="1.4" data-duration="12.5" data-source-duration="46.521" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+      <video id="clip1" class="clip" src="raw.mp4" muted playsinline data-start="12.5" data-media-start="14.5" data-duration="1.6" data-source-duration="46.521" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+      <video id="clip2" class="clip" src="raw.mp4" muted playsinline data-start="14.1" data-media-start="16.6" data-duration="9.9" data-source-duration="46.521" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+      <video id="clip3" class="clip" src="raw.mp4" muted playsinline data-start="24" data-media-start="28.5" data-duration="1.9" data-source-duration="46.521" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+      <video id="clip4" class="clip" src="raw.mp4" muted playsinline data-start="25.9" data-media-start="31.2" data-duration="4.2" data-source-duration="46.521" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+      <video id="clip5" class="clip" src="raw.mp4" muted playsinline data-start="30.1" data-media-start="36.2" data-duration="9" data-source-duration="46.521" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+      <video id="clip6" class="clip" src="raw.mp4" muted playsinline data-start="39.1" data-media-start="46.5" data-duration="0.021" data-source-duration="46.521" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>
+      </div>
+      <audio id="clip0-audio" src="raw.mp4" data-start="0" data-duration="12.5" data-media-start="1.4" data-volume="1"></audio>
+      <audio id="clip1-audio" src="raw.mp4" data-start="12.5" data-duration="1.6" data-media-start="14.5" data-volume="1"></audio>
+      <audio id="clip2-audio" src="raw.mp4" data-start="14.1" data-duration="9.9" data-media-start="16.6" data-volume="1"></audio>
+      <audio id="clip3-audio" src="raw.mp4" data-start="24" data-duration="1.9" data-media-start="28.5" data-volume="1"></audio>
+      <audio id="clip4-audio" src="raw.mp4" data-start="25.9" data-duration="4.2" data-media-start="31.2" data-volume="1"></audio>
+      <audio id="clip5-audio" src="raw.mp4" data-start="30.1" data-duration="9" data-media-start="36.2" data-volume="1"></audio>
+      <audio id="clip6-audio" src="raw.mp4" data-start="39.1" data-duration="0.021" data-media-start="46.5" data-volume="1"></audio>
+      <div id="gfx0" class="overlay clip" data-start="0" data-duration="1.4" data-track-index="10" style="position:absolute;z-index:10;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx0-w0" style="opacity:.45">Assalamu</span> <span id="gfx0-w1" style="opacity:.45">alaikum,</span> <span id="gfx0-w2" style="opacity:.45">fellows.</span></div>
+      <div id="gfx1" class="overlay clip" data-start="1.9" data-duration="2" data-track-index="11" style="position:absolute;z-index:11;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx1-w0" style="opacity:.45">I</span> <span id="gfx1-w1" style="opacity:.45">will</span> <span id="gfx1-w2" style="opacity:.45">share</span> <span id="gfx1-w3" style="opacity:.45">one</span> <span id="gfx1-w4" style="opacity:.45">thing</span></div>
+      <div id="gfx2" class="overlay clip" data-start="3.9" data-duration="1.5" data-track-index="12" style="position:absolute;z-index:12;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx2-w0" style="opacity:.45">about</span> <span id="gfx2-w1" style="opacity:.45">oversharing.</span></div>
+      <div id="gfx3" class="overlay clip" data-start="5.9" data-duration="2.35" data-track-index="13" style="position:absolute;z-index:13;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx3-w0" style="opacity:.45">So</span> <span id="gfx3-w1" style="opacity:.45">when</span> <span id="gfx3-w2" style="opacity:.45">you</span> <span id="gfx3-w3" style="opacity:.45">go</span> <span id="gfx3-w4" style="opacity:.45">to</span> <span id="gfx3-w5" style="opacity:.45">your</span> <span id="gfx3-w6" style="opacity:.45">peer</span></div>
+      <div id="gfx4" class="overlay clip" data-start="8.25" data-duration="1.95" data-track-index="14" style="position:absolute;z-index:14;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx4-w0" style="opacity:.45">or</span> <span id="gfx4-w1" style="opacity:.45">your</span> <span id="gfx4-w2" style="opacity:.45">instructor,</span> <span id="gfx4-w3" style="opacity:.45">manager,</span></div>
+      <div id="gfx5" class="overlay clip" data-start="10.2" data-duration="1.6" data-track-index="15" style="position:absolute;z-index:15;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx5-w0" style="opacity:.45">or</span> <span id="gfx5-w1" style="opacity:.45">team</span> <span id="gfx5-w2" style="opacity:.45">lead,</span> <span id="gfx5-w3" style="opacity:.45">always</span> <span id="gfx5-w4" style="opacity:.45">overshare.</span></div>
+      <div id="gfx6" class="overlay clip" data-start="12.8" data-duration="1" data-track-index="16" style="position:absolute;z-index:16;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx6-w0" style="opacity:.45">When</span> <span id="gfx6-w1" style="opacity:.45">you</span> <span id="gfx6-w2" style="opacity:.45">overshare,</span></div>
+      <div id="gfx7" class="overlay clip" data-start="14.4" data-duration="2.6" data-track-index="17" style="position:absolute;z-index:17;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx7-w0" style="opacity:.45">you</span> <span id="gfx7-w1" style="opacity:.45">can</span> <span id="gfx7-w2" style="opacity:.45">save</span> <span id="gfx7-w3" style="opacity:.45">yourself</span> <span id="gfx7-w4" style="opacity:.45">from</span> <span id="gfx7-w5" style="opacity:.45">unnecessary</span> <span id="gfx7-w6" style="opacity:.45">scolding.</span></div>
+      <div id="gfx8" class="overlay clip" data-start="18.5" data-duration="2.35" data-track-index="18" style="position:absolute;z-index:18;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx8-w0" style="opacity:.45">Like</span> <span id="gfx8-w1" style="opacity:.45">if</span> <span id="gfx8-w2" style="opacity:.45">you</span> <span id="gfx8-w3" style="opacity:.45">say,</span> <span id="gfx8-w4" style="opacity:.45">I</span> <span id="gfx8-w5" style="opacity:.45">have</span> <span id="gfx8-w6" style="opacity:.45">completed</span> <span id="gfx8-w7" style="opacity:.45">all</span> <span id="gfx8-w8" style="opacity:.45">my</span> <span id="gfx8-w9" style="opacity:.45">work,</span></div>
+      <div id="gfx9" class="overlay clip" data-start="21" data-duration="2.3" data-track-index="19" style="position:absolute;z-index:19;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx9-w0" style="opacity:.45">but</span> <span id="gfx9-w1" style="opacity:.45">a</span> <span id="gfx9-w2" style="opacity:.45">little</span> <span id="gfx9-w3" style="opacity:.45">bit</span> <span id="gfx9-w4" style="opacity:.45">is</span> <span id="gfx9-w5" style="opacity:.45">left'</span> <span id="gfx9-w6" style="opacity:.45">or</span> <span id="gfx9-w7" style="opacity:.45">some</span> <span id="gfx9-w8" style="opacity:.45">is</span> <span id="gfx9-w9" style="opacity:.45">left'.</span></div>
+      <div id="gfx10" class="overlay clip" data-start="24.5" data-duration="1.15" data-track-index="20" style="position:absolute;z-index:20;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx10-w0" style="opacity:.45">He</span> <span id="gfx10-w1" style="opacity:.45">might</span> <span id="gfx10-w2" style="opacity:.45">scold</span> <span id="gfx10-w3" style="opacity:.45">you.</span></div>
+      <div id="gfx11" class="overlay clip" data-start="26.2" data-duration="2.6" data-track-index="21" style="position:absolute;z-index:21;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx11-w0" style="opacity:.45">But</span> <span id="gfx11-w1" style="opacity:.45">when</span> <span id="gfx11-w2" style="opacity:.45">you</span> <span id="gfx11-w3" style="opacity:.45">say</span> <span id="gfx11-w4" style="opacity:.45">that</span> <span id="gfx11-w5" style="opacity:.45">I</span> <span id="gfx11-w6" style="opacity:.45">have</span> <span id="gfx11-w7" style="opacity:.45">completed</span> <span id="gfx11-w8" style="opacity:.45">70%</span> <span id="gfx11-w9" style="opacity:.45">of</span> <span id="gfx11-w10" style="opacity:.45">my</span> <span id="gfx11-w11" style="opacity:.45">work,</span></div>
+      <div id="gfx12" class="overlay clip" data-start="28.8" data-duration="1" data-track-index="22" style="position:absolute;z-index:22;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx12-w0" style="opacity:.45">80%</span> <span id="gfx12-w1" style="opacity:.45">of</span> <span id="gfx12-w2" style="opacity:.45">my</span> <span id="gfx12-w3" style="opacity:.45">work.</span></div>
+      <div id="gfx13" class="overlay clip" data-start="30.4" data-duration="1.6" data-track-index="23" style="position:absolute;z-index:23;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx13-w0" style="opacity:.45">Or</span> <span id="gfx13-w1" style="opacity:.45">I</span> <span id="gfx13-w2" style="opacity:.45">have</span> <span id="gfx13-w3" style="opacity:.45">completed</span> <span id="gfx13-w4" style="opacity:.45">all</span> <span id="gfx13-w5" style="opacity:.45">my</span> <span id="gfx13-w6" style="opacity:.45">work,</span></div>
+      <div id="gfx14" class="overlay clip" data-start="32" data-duration="3.55" data-track-index="24" style="position:absolute;z-index:24;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx14-w0" style="opacity:.45">but</span> <span id="gfx14-w1" style="opacity:.45">I</span> <span id="gfx14-w2" style="opacity:.45">have</span> <span id="gfx14-w3" style="opacity:.45">to</span> <span id="gfx14-w4" style="opacity:.45">review</span> <span id="gfx14-w5" style="opacity:.45">this,</span> <span id="gfx14-w6" style="opacity:.45">or</span> <span id="gfx14-w7" style="opacity:.45">check</span> <span id="gfx14-w8" style="opacity:.45">this,</span> <span id="gfx14-w9" style="opacity:.45">or</span> <span id="gfx14-w10" style="opacity:.45">verify</span> <span id="gfx14-w11" style="opacity:.45">this,</span> <span id="gfx14-w12" style="opacity:.45">something</span> <span id="gfx14-w13" style="opacity:.45">like</span> <span id="gfx14-w14" style="opacity:.45">this,</span></div>
+      <div id="gfx15" class="overlay clip" data-start="35.55" data-duration="2.5" data-track-index="25" style="position:absolute;z-index:25;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx15-w0" style="opacity:.45">you</span> <span id="gfx15-w1" style="opacity:.45">can</span> <span id="gfx15-w2" style="opacity:.45">save</span> <span id="gfx15-w3" style="opacity:.45">yourself</span> <span id="gfx15-w4" style="opacity:.45">from</span> <span id="gfx15-w5" style="opacity:.45">unnecessary</span> <span id="gfx15-w6" style="opacity:.45">scolding.</span></div>
+      <div id="gfx16" class="overlay clip" data-start="38.7" data-duration="0.4" data-track-index="26" style="position:absolute;z-index:26;left:0;right:0;bottom:9%;text-align:center;font-size:48px;font-weight:800;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55);line-height:1.2;padding:0 40px;"><span id="gfx16-w0" style="opacity:.45">Thank</span> <span id="gfx16-w1" style="opacity:.45">you.</span></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.to("#gfx0-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 0);
+      tl.to("#gfx0-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 0.5);
+      tl.to("#gfx0-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 0.9);
+      tl.to("#gfx1-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 1.9);
+      tl.to("#gfx1-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 2);
+      tl.to("#gfx1-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 2.15);
+      tl.to("#gfx1-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 2.45);
+      tl.to("#gfx1-w4", { color: "#FF3366", opacity: 1, duration: 0.08 }, 2.65);
+      tl.to("#gfx2-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 2.9);
+      tl.to("#gfx2-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 3.2);
+      tl.to("#gfx3-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 5.9);
+      tl.to("#gfx3-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 6.1);
+      tl.to("#gfx3-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 6.25);
+      tl.to("#gfx3-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 6.35);
+      tl.to("#gfx3-w4", { color: "#FF3366", opacity: 1, duration: 0.08 }, 6.55);
+      tl.to("#gfx3-w5", { color: "#FF3366", opacity: 1, duration: 0.08 }, 6.65);
+      tl.to("#gfx3-w6", { color: "#FF3366", opacity: 1, duration: 0.08 }, 6.85);
+      tl.to("#gfx4-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 7.25);
+      tl.to("#gfx4-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 7.35);
+      tl.to("#gfx4-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 7.55);
+      tl.to("#gfx4-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 8.9);
+      tl.to("#gfx5-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 9.4);
+      tl.to("#gfx5-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 9.55);
+      tl.to("#gfx5-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 9.85);
+      tl.to("#gfx5-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 10.8);
+      tl.to("#gfx5-w4", { color: "#FF3366", opacity: 1, duration: 0.08 }, 11.2);
+      tl.to("#gfx6-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 12.8);
+      tl.to("#gfx6-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 13);
+      tl.to("#gfx6-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 13.15);
+      tl.to("#gfx7-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 14.4);
+      tl.to("#gfx7-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 14.65);
+      tl.to("#gfx7-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 14.8);
+      tl.to("#gfx7-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 15.1);
+      tl.to("#gfx7-w4", { color: "#FF3366", opacity: 1, duration: 0.08 }, 15.5);
+      tl.to("#gfx7-w5", { color: "#FF3366", opacity: 1, duration: 0.08 }, 15.7);
+      tl.to("#gfx7-w6", { color: "#FF3366", opacity: 1, duration: 0.08 }, 16.4);
+      tl.to("#gfx8-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 18.5);
+      tl.to("#gfx8-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 18.8);
+      tl.to("#gfx8-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 18.9);
+      tl.to("#gfx8-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 19.05);
+      tl.to("#gfx8-w4", { color: "#FF3366", opacity: 1, duration: 0.08 }, 19.35);
+      tl.to("#gfx8-w5", { color: "#FF3366", opacity: 1, duration: 0.08 }, 19.5);
+      tl.to("#gfx8-w6", { color: "#FF3366", opacity: 1, duration: 0.08 }, 19.65);
+      tl.to("#gfx8-w7", { color: "#FF3366", opacity: 1, duration: 0.08 }, 20.15);
+      tl.to("#gfx8-w8", { color: "#FF3366", opacity: 1, duration: 0.08 }, 20.3);
+      tl.to("#gfx8-w9", { color: "#FF3366", opacity: 1, duration: 0.08 }, 20.45);
+      tl.to("#gfx9-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 21);
+      tl.to("#gfx9-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 21.2);
+      tl.to("#gfx9-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 21.25);
+      tl.to("#gfx9-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 21.55);
+      tl.to("#gfx9-w4", { color: "#FF3366", opacity: 1, duration: 0.08 }, 21.75);
+      tl.to("#gfx9-w5", { color: "#FF3366", opacity: 1, duration: 0.08 }, 21.9);
+      tl.to("#gfx9-w6", { color: "#FF3366", opacity: 1, duration: 0.08 }, 22.25);
+      tl.to("#gfx9-w7", { color: "#FF3366", opacity: 1, duration: 0.08 }, 22.5);
+      tl.to("#gfx9-w8", { color: "#FF3366", opacity: 1, duration: 0.08 }, 22.8);
+      tl.to("#gfx9-w9", { color: "#FF3366", opacity: 1, duration: 0.08 }, 22.95);
+      tl.to("#gfx10-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 24.5);
+      tl.to("#gfx10-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 24.65);
+      tl.to("#gfx10-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 24.95);
+      tl.to("#gfx10-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 25.35);
+      tl.to("#gfx11-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 26.2);
+      tl.to("#gfx11-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 26.4);
+      tl.to("#gfx11-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 26.55);
+      tl.to("#gfx11-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 26.65);
+      tl.to("#gfx11-w4", { color: "#FF3366", opacity: 1, duration: 0.08 }, 26.9);
+      tl.to("#gfx11-w5", { color: "#FF3366", opacity: 1, duration: 0.08 }, 27.05);
+      tl.to("#gfx11-w6", { color: "#FF3366", opacity: 1, duration: 0.08 }, 27.15);
+      tl.to("#gfx11-w7", { color: "#FF3366", opacity: 1, duration: 0.08 }, 27.3);
+      tl.to("#gfx11-w8", { color: "#FF3366", opacity: 1, duration: 0.08 }, 27.8);
+      tl.to("#gfx11-w9", { color: "#FF3366", opacity: 1, duration: 0.08 }, 28.2);
+      tl.to("#gfx11-w10", { color: "#FF3366", opacity: 1, duration: 0.08 }, 28.3);
+      tl.to("#gfx11-w11", { color: "#FF3366", opacity: 1, duration: 0.08 }, 28.45);
+      tl.to("#gfx12-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 28.8);
+      tl.to("#gfx12-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 29.2);
+      tl.to("#gfx12-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 29.3);
+      tl.to("#gfx12-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 29.45);
+      tl.to("#gfx13-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 30.4);
+      tl.to("#gfx13-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 30.6);
+      tl.to("#gfx13-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 30.7);
+      tl.to("#gfx13-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 30.85);
+      tl.to("#gfx13-w4", { color: "#FF3366", opacity: 1, duration: 0.08 }, 31.35);
+      tl.to("#gfx13-w5", { color: "#FF3366", opacity: 1, duration: 0.08 }, 31.5);
+      tl.to("#gfx13-w6", { color: "#FF3366", opacity: 1, duration: 0.08 }, 31.65);
+      tl.to("#gfx14-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 32);
+      tl.to("#gfx14-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 32.15);
+      tl.to("#gfx14-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 32.25);
+      tl.to("#gfx14-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 32.4);
+      tl.to("#gfx14-w4", { color: "#FF3366", opacity: 1, duration: 0.08 }, 32.5);
+      tl.to("#gfx14-w5", { color: "#FF3366", opacity: 1, duration: 0.08 }, 32.9);
+      tl.to("#gfx14-w6", { color: "#FF3366", opacity: 1, duration: 0.08 }, 33.15);
+      tl.to("#gfx14-w7", { color: "#FF3366", opacity: 1, duration: 0.08 }, 33.3);
+      tl.to("#gfx14-w8", { color: "#FF3366", opacity: 1, duration: 0.08 }, 33.6);
+      tl.to("#gfx14-w9", { color: "#FF3366", opacity: 1, duration: 0.08 }, 33.85);
+      tl.to("#gfx14-w10", { color: "#FF3366", opacity: 1, duration: 0.08 }, 34);
+      tl.to("#gfx14-w11", { color: "#FF3366", opacity: 1, duration: 0.08 }, 34.4);
+      tl.to("#gfx14-w12", { color: "#FF3366", opacity: 1, duration: 0.08 }, 34.65);
+      tl.to("#gfx14-w13", { color: "#FF3366", opacity: 1, duration: 0.08 }, 35.1);
+      tl.to("#gfx14-w14", { color: "#FF3366", opacity: 1, duration: 0.08 }, 35.25);
+      tl.to("#gfx15-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 35.55);
+      tl.to("#gfx15-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 35.7);
+      tl.to("#gfx15-w2", { color: "#FF3366", opacity: 1, duration: 0.08 }, 35.85);
+      tl.to("#gfx15-w3", { color: "#FF3366", opacity: 1, duration: 0.08 }, 36.15);
+      tl.to("#gfx15-w4", { color: "#FF3366", opacity: 1, duration: 0.08 }, 36.55);
+      tl.to("#gfx15-w5", { color: "#FF3366", opacity: 1, duration: 0.08 }, 36.75);
+      tl.to("#gfx15-w6", { color: "#FF3366", opacity: 1, duration: 0.08 }, 37.45);
+      tl.to("#gfx16-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 38.7);
+      tl.to("#gfx16-w1", { color: "#FF3366", opacity: 1, duration: 0.08 }, 38.9);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

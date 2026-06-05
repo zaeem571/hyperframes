@@ -15,6 +15,13 @@ mkdirSync("dist", { recursive: true });
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 
+// ESM output: provide a real `require` so esbuild's __require shim delegates to it
+// instead of throwing "Dynamic require of X is not supported". Needed because bundled
+// CJS deps (e.g. recast, pulled in via core's gsapParser) call require() at load time.
+const requireShimBanner = {
+  js: "import { createRequire as __createRequire } from 'module'; const require = __createRequire(import.meta.url);",
+};
+
 const workspaceAliasPlugin = {
   name: "workspace-alias",
   setup(build) {
@@ -46,6 +53,7 @@ await Promise.all([
     plugins: [workspaceAliasPlugin],
     minify: false,
     sourcemap: true,
+    banner: requireShimBanner,
     entryPoints: ["src/index.ts"],
     outfile: "dist/index.js",
   }),
@@ -58,6 +66,7 @@ await Promise.all([
     plugins: [workspaceAliasPlugin],
     minify: false,
     sourcemap: true,
+    banner: requireShimBanner,
     entryPoints: ["src/server.ts"],
     outfile: "dist/public-server.js",
   }),
@@ -74,6 +83,7 @@ await Promise.all([
     plugins: [workspaceAliasPlugin],
     minify: false,
     sourcemap: true,
+    banner: requireShimBanner,
     entryPoints: ["src/services/pngDecodeBlitWorker.ts"],
     outfile: "dist/services/pngDecodeBlitWorker.js",
   }),
@@ -90,6 +100,7 @@ await Promise.all([
     plugins: [workspaceAliasPlugin],
     minify: false,
     sourcemap: true,
+    banner: requireShimBanner,
     entryPoints: ["src/services/shaderTransitionWorker.ts"],
     outfile: "dist/services/shaderTransitionWorker.js",
   }),
@@ -107,6 +118,7 @@ await Promise.all([
     plugins: [workspaceAliasPlugin],
     minify: false,
     sourcemap: true,
+    banner: requireShimBanner,
     entryPoints: ["src/distributed.ts"],
     outfile: "dist/distributed.js",
   }),
