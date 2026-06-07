@@ -6,7 +6,7 @@
  * deterministic and trivially snapshot-testable.
  */
 
-import type { GraphicPlacement } from "./types.js";
+import type { CaptionStyleId, GraphicPlacement } from "./types.js";
 
 /** Escape text for safe insertion into element bodies and double-quoted attributes. */
 export function escapeHtml(value: string): string {
@@ -105,14 +105,27 @@ export function document(opts: {
   overlays: string;
   audios: string;
   timelineScript: string;
+  /** Google Fonts query string for the selected caption style only. */
+  captionFontQuery?: string;
+  /** Selected subtitle style id (written to root for verification). */
+  subtitleStyleId?: CaptionStyleId;
 }): string {
   const { width, height } = opts;
+  const fontLinks = opts.captionFontQuery
+    ? `    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?${opts.captionFontQuery}&display=swap" rel="stylesheet" />
+`
+    : "";
+  const styleAttr = opts.subtitleStyleId
+    ? `\n      data-subtitle-style="${escapeHtml(opts.subtitleStyleId)}"`
+    : "";
   return `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=${width}, height=${height}" />
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+${fontLinks}    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: ${width}px; height: ${height}px; overflow: hidden; background: #000; }
@@ -126,7 +139,7 @@ export function document(opts: {
       data-start="0"
       data-duration="${num(opts.outputDuration)}"
       data-width="${width}"
-      data-height="${height}"
+      data-height="${height}"${styleAttr}
     >
       <div id="aroll-stage" style="position:absolute;inset:0">
 ${opts.stageInner}

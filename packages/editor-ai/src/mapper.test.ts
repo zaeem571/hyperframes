@@ -12,6 +12,7 @@ const manifest: AssetManifest = {
 // source duration 30, one cut 2-5 -> segments [0-2 @0], [5-30 @2]; outputDuration 27.
 const edl: Edl = {
   source_duration: 30,
+  subtitle_style_id: "hormozi_serifpop",
   style_decisions: {
     archetype: "talking_head",
     accent_color: "#FF3366",
@@ -29,9 +30,11 @@ const edl: Edl = {
       end: 9,
       type: "caption",
       text: "the quick",
+      caption_style_id: "hormozi_serifpop",
+      caption_zone: "zone_midlow",
       words: [
         { word: "the", start: 6, end: 6.5 },
-        { word: "quick", start: 6.5, end: 7 },
+        { word: "quick", start: 6.5, end: 7, emphasis: true },
       ],
     },
   ],
@@ -76,13 +79,13 @@ describe("buildHtml", () => {
     expect(html).toContain(", 7);"); // remapped punch-in start
   });
 
-  it("renders karaoke captions as per-word spans with accent color tweens", () => {
+  it("renders stacked captions per subtitlesguide (Montserrat + serif emphasis)", () => {
     expect(html).toContain('id="gfx1-w0"');
     expect(html).toContain('id="gfx1-w1"');
-    // word "the" starts at source 6 -> output 3
-    expect(html).toContain(
-      'tl.to("#gfx1-w0", { color: "#FF3366", opacity: 1, duration: 0.08 }, 3);',
-    );
+    expect(html).toContain("Montserrat");
+    expect(html).toContain("DM Serif Display");
+    expect(html).toContain('data-track-index="31"');
+    expect(html).toContain('tl.to("#gfx1-w0"');
   });
 
   it("escapes text content in overlays", () => {

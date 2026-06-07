@@ -19,16 +19,26 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assetIds, loadAssetManifest } from "./assets.js";
-import { EDL_RESPONSE_SCHEMA, SCHEMA_VERSION } from "./schema.js";
+import {
+  catalogForPrompt,
+  defaultEditorSystemPath,
+  defaultEditorUserTemplatePath,
+  fillEditorUserTemplate,
+  loadCatalog,
+  motionGraphicTemplateIds,
+  type EditorCatalog,
+} from "./catalog.js";
+import { generateStructuredJson, uploadVideoFile } from "./geminiClient.js";
+import {
+  EDITOR_ORCHESTRATOR_RESPONSE_SCHEMA,
+  EDITOR_SCHEMA_VERSION,
+  EDL_RESPONSE_SCHEMA,
+  SCHEMA_VERSION,
+} from "./schema.js";
 import type { Edl } from "./types.js";
+import type { TranscriptWord } from "./transcript.js";
 
 const DEFAULT_MODEL = "gemini-2.5-flash";
-const UPLOAD_POLL_INTERVAL_MS = 2_000;
-const UPLOAD_TIMEOUT_MS = 5 * 60_000;
-const MAX_RETRIES = 5;
-const RETRY_BASE_MS = 2_000;
-// Transient server-side / rate-limit statuses worth retrying with backoff.
-const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
 
 export interface AnalyzeOptions {
   /** Absolute or relative path to the raw .mp4 to analyze. */
@@ -47,37 +57,30 @@ export interface AnalyzeOptions {
   force?: boolean;
 }
 
+export interface AnalyzeEditsOptions {
+  videoPath: string;
+  transcriptWords: TranscriptWord[];
+  /** Creative brief for editor-in-chief decisions. */
+  userGuidance?: string;
+  apiKey?: string;
+  model?: string;
+  cacheDir?: string;
+  /** Orchestrator system prompt. Defaults to config/editor-system.md. */
+  systemPromptPath?: string;
+  /** Per-run user message template. Defaults to config/editor-user-template.md. */
+  userTemplatePath?: string;
+  /** Tool catalog. Defaults to config/catalog.json. */
+  catalogPath?: string;
+  manifestPath?: string;
+  force?: boolean;
+}
+
 const configFile = (name: string): string =>
   fileURLToPath(new URL(`../config/${name}`, import.meta.url));
 const defaultCacheDir = (): string => fileURLToPath(new URL("../.cache/", import.meta.url));
 
-const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
-
-/** Retry a call on transient Gemini errors (503 overloaded, 429 rate-limit, 5xx) with exponential backoff. */
-async function withRetry<T>(fn: () => Promise<T>): Promise<T> {
-  let lastErr: unknown;
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    try {
-      return await fn();
-    } catch (err) {
-      lastErr = err;
-      const status = (err as { status?: number }).status;
-      if (attempt === MAX_RETRIES || (status !== undefined && !RETRYABLE_STATUS.has(status))) {
-        throw err;
-      }
-      const waitMs = RETRY_BASE_MS * 2 ** attempt;
-      console.warn(
-        `Gemini transient error${status ? ` (${status})` : ""}; retrying in ${waitMs / 1000}s ` +
-          `(attempt ${attempt + 1}/${MAX_RETRIES})...`,
-      );
-      await sleep(waitMs);
-    }
-  }
-  throw lastErr;
-}
-
 /**
- * Analyze a raw video and return its EDL, using the on-disk cache when possible.
+ * Legacy full analyzer: Gemini watches video and emits EDL including its own captions.
  */
 export async function analyze(opts: AnalyzeOptions): Promise<Edl> {
   const {
@@ -96,8 +99,6 @@ export async function analyze(opts: AnalyzeOptions): Promise<Edl> {
     loadAssetManifest(manifestPath),
   ]);
 
-  // Cache key folds in everything that changes the model's output: the video, the
-  // prompt, the schema shape, and the model. Editing any of them busts the cache.
   const hash = createHash("sha256")
     .update(videoBytes)
     .update(instructions)
@@ -121,7 +122,19 @@ export async function analyze(opts: AnalyzeOptions): Promise<Edl> {
   }
 
   const manifestJson = JSON.stringify(manifest, null, 2);
-  const edl = await callGemini({ videoPath, apiKey, model, instructions, manifestJson });
+  const video = await uploadVideoFile(apiKey, videoPath);
+  const edl = await generateStructuredJson<Edl>({
+    apiKey,
+    model,
+    systemInstruction: instructions,
+    userText:
+      "Analyze this video end-to-end and produce the EDL per your instructions. " +
+      "Watch the whole clip before deciding cuts.\n\n" +
+      `ASSET MANIFEST (choose asset_id values only from these):\n${manifestJson}`,
+    responseSchema: EDL_RESPONSE_SCHEMA as unknown as Record<string, unknown>,
+    video,
+    temperature: 0.2,
+  });
 
   validateEdl(edl, assetIds(manifest));
 
@@ -130,88 +143,96 @@ export async function analyze(opts: AnalyzeOptions): Promise<Edl> {
   return edl;
 }
 
-interface CallGeminiArgs {
-  videoPath: string;
-  apiKey: string;
-  model: string;
-  instructions: string;
-  manifestJson: string;
+/**
+ * Editor-in-chief pass: video + corrected whisper transcript + user guidance → EDL.
+ * Does not emit spoken-word captions (those are merged from the transcript downstream).
+ */
+export async function analyzeEdits(opts: AnalyzeEditsOptions): Promise<Edl> {
+  const {
+    videoPath,
+    transcriptWords,
+    userGuidance = "",
+    apiKey = process.env.GEMINI_API_KEY,
+    model = DEFAULT_MODEL,
+    cacheDir = defaultCacheDir(),
+    systemPromptPath = defaultEditorSystemPath(),
+    userTemplatePath = defaultEditorUserTemplatePath(),
+    catalogPath = configFile("catalog.json"),
+    manifestPath = configFile("asset-manifest.json"),
+    force = false,
+  } = opts;
+
+  const [videoBytes, systemPrompt, userTemplate, catalog, manifest] = await Promise.all([
+    readFile(videoPath),
+    readFile(systemPromptPath, "utf-8"),
+    readFile(userTemplatePath, "utf-8"),
+    loadCatalog(catalogPath),
+    loadAssetManifest(manifestPath),
+  ]);
+
+  const transcriptJson = JSON.stringify(transcriptWords, null, 2);
+  const catalogJson = JSON.stringify(catalogForPrompt(catalog), null, 2);
+  const userText = fillEditorUserTemplate(userTemplate, {
+    userGuidance,
+    transcriptJson,
+    catalogJson,
+  });
+
+  const hash = createHash("sha256")
+    .update(videoBytes)
+    .update(systemPrompt)
+    .update(userTemplate)
+    .update(catalogJson)
+    .update(EDITOR_SCHEMA_VERSION)
+    .update(transcriptJson)
+    .update(userGuidance)
+    .update(model)
+    .digest("hex");
+  const cachePath = join(cacheDir, `editor-${hash}.json`);
+
+  if (!force && existsSync(cachePath)) {
+    try {
+      const cached = JSON.parse(await readFile(cachePath, "utf-8")) as Edl;
+      return stripOrchestratorOutput(cached);
+    } catch {
+      // fall through
+    }
+  }
+
+  if (!apiKey) {
+    throw new Error(
+      "Gemini API key required: pass opts.apiKey or set GEMINI_API_KEY (no cache hit available).",
+    );
+  }
+
+  const video = await uploadVideoFile(apiKey, videoPath);
+  const edl = await generateStructuredJson<Edl>({
+    apiKey,
+    model,
+    systemInstruction: systemPrompt,
+    userText,
+    responseSchema: EDITOR_ORCHESTRATOR_RESPONSE_SCHEMA as unknown as Record<string, unknown>,
+    video,
+    temperature: 0.2,
+  });
+
+  const cleaned = stripOrchestratorOutput(edl);
+  validateOrchestratorEdl(cleaned, assetIds(manifest), catalog);
+
+  await mkdir(cacheDir, { recursive: true });
+  await writeFile(cachePath, JSON.stringify(cleaned, null, 2), "utf-8");
+  return cleaned;
 }
 
-async function callGemini(args: CallGeminiArgs): Promise<Edl> {
-  const { videoPath, apiKey, model, instructions, manifestJson } = args;
-  const { GoogleGenAI, createPartFromUri } = await import("@google/genai");
-  const ai = new GoogleGenAI({ apiKey });
-
-  // Upload via the File API and wait until the video is processed.
-  const uploaded = await ai.files.upload({ file: videoPath, config: { mimeType: "video/mp4" } });
-  const ready = await waitForActiveFile(ai, uploaded.name);
-
-  const response = await withRetry(() =>
-    ai.models.generateContent({
-      model,
-      contents: [
-        {
-          role: "user",
-          parts: [
-            createPartFromUri(ready.uri, ready.mimeType),
-            {
-              text:
-                "Analyze this video end-to-end and produce the EDL per your instructions. " +
-                "Watch the whole clip before deciding cuts.\n\n" +
-                `ASSET MANIFEST (choose asset_id values only from these):\n${manifestJson}`,
-            },
-          ],
-        },
-      ],
-      config: {
-        // The editing rules go in systemInstruction — the model adheres to these more
-        // strictly than to rules buried in the user turn.
-        systemInstruction: instructions,
-        responseMimeType: "application/json",
-        responseSchema: EDL_RESPONSE_SCHEMA as unknown as Record<string, unknown>,
-        temperature: 0.2,
-      },
-    }),
-  );
-
-  const text = response.text;
-  if (!text) throw new Error("Gemini returned an empty response.");
-  try {
-    return JSON.parse(text) as Edl;
-  } catch (err) {
-    throw new Error(`Gemini response was not valid JSON: ${(err as Error).message}`);
-  }
-}
-
-/** Poll the File API until the uploaded video is ACTIVE; throw on FAILED or timeout. */
-async function waitForActiveFile(
-  ai: {
-    files: {
-      get: (a: {
-        name: string;
-      }) => Promise<{ name?: string; uri?: string; mimeType?: string; state?: string }>;
-    };
-  },
-  name: string | undefined,
-): Promise<{ uri: string; mimeType: string }> {
-  if (!name) throw new Error("File upload did not return a file name.");
-
-  const deadline = Date.now() + UPLOAD_TIMEOUT_MS;
-  for (;;) {
-    const file = await ai.files.get({ name });
-    if (file.state === "ACTIVE") {
-      if (!file.uri || !file.mimeType) {
-        throw new Error("Uploaded file is ACTIVE but missing uri/mimeType.");
-      }
-      return { uri: file.uri, mimeType: file.mimeType };
-    }
-    if (file.state === "FAILED") throw new Error("Gemini failed to process the uploaded video.");
-    if (Date.now() > deadline) {
-      throw new Error(`Timed out waiting for video to become ACTIVE (last state: ${file.state}).`);
-    }
-    await sleep(UPLOAD_POLL_INTERVAL_MS);
-  }
+function stripOrchestratorOutput(edl: Edl): Edl {
+  return {
+    ...edl,
+    cuts: [],
+    punch_ins: [],
+    sfx: [],
+    graphics: (edl.graphics ?? []).filter((g) => g.type !== "caption"),
+    motion_graphic_requests: edl.motion_graphic_requests ?? [],
+  };
 }
 
 /** Light structural guard: finite times, end>start, and known asset ids. */
@@ -245,3 +266,39 @@ function validateEdl(edl: Edl, validAssetIds: Set<string>): void {
     }
   }
 }
+
+function validateOrchestratorEdl(
+  edl: Edl,
+  validAssetIds: Set<string>,
+  catalog: EditorCatalog,
+): void {
+  if (!edl || typeof edl !== "object") throw new Error("EDL is not an object.");
+  if (!Number.isFinite(edl.source_duration)) throw new Error("EDL.source_duration is not finite.");
+  if (!edl.style_decisions) throw new Error("EDL.style_decisions is missing.");
+
+  for (const g of edl.graphics ?? []) {
+    if (!Number.isFinite(g.start) || !Number.isFinite(g.end) || g.end <= g.start) {
+      throw new Error(`Invalid graphic span: ${JSON.stringify(g)}`);
+    }
+    if (g.type === "image" && (!g.asset_id || !validAssetIds.has(g.asset_id))) {
+      throw new Error(`Graphic image references unknown asset_id: ${g.asset_id}`);
+    }
+  }
+
+  const templates = motionGraphicTemplateIds(catalog);
+
+  for (const r of edl.motion_graphic_requests ?? []) {
+    if (!Number.isFinite(r.start) || !Number.isFinite(r.end) || r.end <= r.start) {
+      throw new Error(`Invalid motion_graphic_request span: ${JSON.stringify(r)}`);
+    }
+    if (!templates.has(r.template_id)) {
+      throw new Error(`motion_graphic_request unknown template_id: ${r.template_id}`);
+    }
+    if (r.coverage !== "half" && r.coverage !== "full") {
+      throw new Error(`motion_graphic_request invalid coverage: ${r.coverage}`);
+    }
+  }
+}
+
+/** @deprecated Use defaultEditorSystemPath from catalog.ts */
+export const defaultEditorInstructionsPath = defaultEditorSystemPath;

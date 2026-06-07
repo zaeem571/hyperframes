@@ -20,7 +20,10 @@ Thumbs.db
 # non-generated assets (logos, svgs) that should stay in the repo.
 docs/images/
 
-videos/
+# User footage and edited outputs (large binaries — not committed)
+videos/*
+!videos/.gitkeep
+!videos/README.md
 
 # IDE
 .vscode/

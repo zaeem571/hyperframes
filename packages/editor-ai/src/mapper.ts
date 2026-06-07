@@ -17,11 +17,23 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadAssetManifest, type AssetManifest } from "./assets.js";
+import {
+  buildStackedCaption,
+  fontsForCaptionStyle,
+  resolveEdlSubtitleStyleId,
+} from "./captionsRenderer.js";
 import { probeVideoInfo } from "./ffprobe.js";
 import { normalizeForSeeking } from "./normalize.js";
 import * as h from "./html.js";
 import { computeKeptSegments, spanToOut, srcToOut, type KeptTimeline } from "./timeline.js";
-import type { Edl, Graphic, GraphicPlacement, StyleDecisions } from "./types.js";
+import type {
+  Edl,
+  Graphic,
+  GraphicPlacement,
+  StyleDecisions,
+  CaptionStyleId,
+  CaptionZone,
+} from "./types.js";
 
 const OUTPUT_VIDEO_NAME = "raw.mp4";
 const defaultManifestPath = (): string =>
@@ -56,13 +68,22 @@ export function buildHtml(args: BuildHtmlArgs): string {
     videoSrc = OUTPUT_VIDEO_NAME,
   } = args;
   const timeline = computeKeptSegments(edl.cuts ?? [], sourceDuration);
-  // Scale text/overlay sizing to resolution (1.0 at 1080p short-side).
   const scale = Math.min(width, height) / 1080;
+  const subtitleStyleId = resolveEdlSubtitleStyleId(edl);
+  const hasCaptions = (edl.graphics ?? []).some((g) => g.type === "caption");
 
   const stageInner = buildStage(timeline, videoSrc, sourceDuration);
   const voice = buildVoiceTracks(timeline, videoSrc);
   const sfx = buildSfx(edl, manifest, timeline);
-  const { overlays, karaokeScript } = buildOverlays(edl, manifest, timeline, scale);
+  const { overlays, karaokeScript } = buildOverlays(
+    edl,
+    manifest,
+    timeline,
+    scale,
+    width,
+    height,
+    subtitleStyleId,
+  );
   const punchScript = buildPunchIns(edl, timeline);
 
   return h.document({
@@ -73,6 +94,8 @@ export function buildHtml(args: BuildHtmlArgs): string {
     overlays,
     audios: [voice, sfx].filter(Boolean).join("\n"),
     timelineScript: [punchScript, karaokeScript].filter(Boolean).join("\n"),
+    captionFontQuery: hasCaptions ? fontsForCaptionStyle(subtitleStyleId) : undefined,
+    subtitleStyleId: hasCaptions ? subtitleStyleId : undefined,
   });
 }
 
@@ -145,14 +168,22 @@ function buildOverlays(
   manifest: AssetManifest,
   timeline: KeptTimeline,
   scale: number,
+  width: number,
+  height: number,
+  subtitleStyleId: CaptionStyleId,
 ): { overlays: string; karaokeScript: string } {
   const style = edl.style_decisions;
   const blocks: string[] = [];
   const scripts: string[] = [];
 
   (edl.graphics ?? []).forEach((g, gi) => {
-    const span = spanToOut(g.start, g.end, timeline);
-    if (!span) return; // fully inside a removed cut
+    const outputBase = g.timeline_base === "output";
+    const span = outputBase
+      ? g.end - g.start > 1e-6
+        ? { start: g.start, duration: g.end - g.start }
+        : null
+      : spanToOut(g.start, g.end, timeline);
+    if (!span) return; // fully inside a removed cut or empty
 
     const placement: GraphicPlacement = g.placement ?? style.caption_placement;
     const css = overlayStyle(g, style, placement, scale);
@@ -176,14 +207,23 @@ function buildOverlays(
     }
 
     if (g.type === "caption" && style.caption_style === "karaoke" && g.words?.length) {
-      const { html, gsap } = buildKaraoke(id, g, style, timeline);
+      const { html, gsap } = buildStackedCaption(
+        id,
+        g,
+        style,
+        timeline,
+        width,
+        height,
+        subtitleStyleId,
+      );
+      const zoneCss = captionZoneCss(g.caption_zone, subtitleStyleId, width, height);
       blocks.push(
         h.overlayEl({
           id,
           start: span.start,
           duration: span.duration,
-          trackIndex: 10 + gi,
-          style: css,
+          trackIndex: 30 + gi,
+          style: zoneCss,
           innerHtml: html,
         }),
       );
@@ -228,25 +268,46 @@ function overlayStyle(
   );
 }
 
-/** Per-word spans + GSAP color/opacity tweens at each word's remapped start time. */
-function buildKaraoke(
-  id: string,
-  g: Graphic,
-  style: StyleDecisions,
-  timeline: KeptTimeline,
-): { html: string; gsap: string } {
-  const spans: string[] = [];
-  const tweens: string[] = [];
-  (g.words ?? []).forEach((w, wi) => {
-    const wid = `${id}-w${wi}`;
-    spans.push(`<span id="${wid}" style="opacity:.45">${h.escapeHtml(w.word)}</span>`);
-    const at = srcToOut(w.start, timeline);
-    // Animates color + opacity (NOT volume) so the producer's audio-automation probe stays off.
-    tweens.push(
-      `      tl.to("#${wid}", { color: "${style.accent_color}", opacity: 1, duration: 0.08 }, ${num(at)});`,
+/** Absolute caption zone positioning per subtitlesguide.md (1080×1920 design space). */
+function captionZoneCss(
+  zone: CaptionZone | undefined,
+  styleId: CaptionStyleId,
+  width: number,
+  height: number,
+): string {
+  const sx = width / 1080;
+  const sy = height / 1920;
+
+  if (styleId === "beat_bounce" || zone === "zone_center") {
+    const y = Math.round(960 * sy);
+    return (
+      `left:50%;top:${y}px;transform:translate(-50%,-50%);text-align:center;` +
+      `width:92%;max-width:${Math.round(980 * sx)}px;pointer-events:none;`
     );
-  });
-  return { html: spans.join(" "), gsap: tweens.join("\n") };
+  }
+
+  const centered =
+    styleId === "hormozi_classic" || styleId === "pill_box" || styleId === "karaoke_sweep";
+
+  let yDesign = zone === "zone_top" ? 470 : 1300;
+  if (yDesign >= 500 && yDesign <= 1150) {
+    yDesign = zone === "zone_top" ? 430 : 1320;
+  }
+  const y = Math.round(yDesign * sy);
+  const maxW = Math.round(820 * sx);
+
+  if (centered) {
+    return (
+      `left:50%;top:${y}px;transform:translate(-50%,-50%);text-align:center;` +
+      `width:92%;max-width:${maxW}px;pointer-events:none;`
+    );
+  }
+
+  const x = Math.round(90 * sx);
+  return (
+    `left:${x}px;top:${y}px;transform:translateY(-50%);text-align:left;` +
+    `max-width:${maxW}px;line-height:1.06;pointer-events:none;`
+  );
 }
 
 // ---------------------------------------------------------------------------

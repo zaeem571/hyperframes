@@ -1,0 +1,324 @@
+{
+  "$schema": "editor-ai-catalog-v1",
+  "generated": "2026-06-07",
+  "sources": {
+    "shader_transitions": "packages/shader-transitions/src/shaders/registry.ts (SHADER_NAMES)",
+    "registry_manifest": "registry/registry.json + hyperframes catalog CLI",
+    "sfx_assets": "packages/editor-ai/config/asset-manifest.json",
+    "motion_graphic_templates": "Planned sub-agent archetypes (motiongraphicdesign.md — Step 4)"
+  },
+  "transitions": [
+    {
+      "id": "hard_cut",
+      "shader": null,
+      "source": "built-in",
+      "registry_block": null,
+      "title": "Hard cut (no visible transition)",
+      "when_to_use": "Default for most cuts (~2 of every 3). Instant jump; keeps reel pace without visual noise.",
+      "default_duration_sec": 0,
+      "energy": "neutral"
+    },
+    {
+      "id": "flash-through-white",
+      "shader": "flash-through-white",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "flash-through-white",
+      "title": "Flash through white",
+      "when_to_use": "Punchy beat change, hook-to-body, or emphasis after a strong line. High retention reels.",
+      "default_duration_sec": 0.5,
+      "energy": "high"
+    },
+    {
+      "id": "whip-pan",
+      "shader": "whip-pan",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "whip-pan",
+      "title": "Whip pan",
+      "when_to_use": "Topic shift or energy spike; simulates fast camera move. Good on meaningful cuts only.",
+      "default_duration_sec": 0.45,
+      "energy": "high"
+    },
+    {
+      "id": "glitch",
+      "shader": "glitch",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "glitch",
+      "title": "Digital glitch",
+      "when_to_use": "Tech/error punchline, 'plot twist' beat, or deliberate disruption. Use sparingly.",
+      "default_duration_sec": 0.5,
+      "energy": "high"
+    },
+    {
+      "id": "light-leak",
+      "shader": "light-leak",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "light-leak",
+      "title": "Cinematic light leak",
+      "when_to_use": "Warm emotional beat, B-roll handoff, or softer tonal shift without harsh flash.",
+      "default_duration_sec": 0.7,
+      "energy": "medium"
+    },
+    {
+      "id": "cinematic-zoom",
+      "shader": "cinematic-zoom",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "cinematic-zoom",
+      "title": "Cinematic zoom blur",
+      "when_to_use": "Dramatic reveal or 'zoom into' moment; pairs with impact SFX.",
+      "default_duration_sec": 0.7,
+      "energy": "high"
+    },
+    {
+      "id": "sdf-iris",
+      "shader": "sdf-iris",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "sdf-iris",
+      "title": "Iris wipe",
+      "when_to_use": "Scene end, new section, or 'focus in' beat. Classic but visible — not every cut.",
+      "default_duration_sec": 0.65,
+      "energy": "medium"
+    },
+    {
+      "id": "domain-warp",
+      "shader": "domain-warp",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "domain-warp-dissolve",
+      "title": "Domain warp dissolve",
+      "when_to_use": "Organic morph between related ideas; smoother than glitch, more stylized than hard cut.",
+      "default_duration_sec": 0.8,
+      "energy": "medium"
+    },
+    {
+      "id": "cross-warp-morph",
+      "shader": "cross-warp-morph",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "cross-warp-morph",
+      "title": "Cross warp morph",
+      "when_to_use": "Conceptual link between two beats; noise-driven blend when both frames matter.",
+      "default_duration_sec": 0.75,
+      "energy": "medium"
+    },
+    {
+      "id": "ridged-burn",
+      "shader": "ridged-burn",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "ridged-burn",
+      "title": "Ridged burn",
+      "when_to_use": "Aggressive transition; conflict, destruction, or 'burn away' metaphor.",
+      "default_duration_sec": 0.7,
+      "energy": "high"
+    },
+    {
+      "id": "ripple-waves",
+      "shader": "ripple-waves",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "ripple-waves",
+      "title": "Ripple waves",
+      "when_to_use": "Calmer passage change; water/flow metaphor or gentle section break.",
+      "default_duration_sec": 0.7,
+      "energy": "low"
+    },
+    {
+      "id": "gravitational-lens",
+      "shader": "gravitational-lens",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "gravitational-lens",
+      "title": "Gravitational lens",
+      "when_to_use": "Sci-fi or 'big idea' beat; warps space before landing the next line.",
+      "default_duration_sec": 0.8,
+      "energy": "high"
+    },
+    {
+      "id": "chromatic-split",
+      "shader": "chromatic-split",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "chromatic-radial-split",
+      "title": "Chromatic split",
+      "when_to_use": "Stylized punch; RGB separation on a key beat. Pairs with glitch-adjacent content.",
+      "default_duration_sec": 0.55,
+      "energy": "high"
+    },
+    {
+      "id": "swirl-vortex",
+      "shader": "swirl-vortex",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "swirl-vortex",
+      "title": "Swirl vortex",
+      "when_to_use": "Disorient-then-land beat; transition into a surprising statement.",
+      "default_duration_sec": 0.75,
+      "energy": "high"
+    },
+    {
+      "id": "thermal-distortion",
+      "shader": "thermal-distortion",
+      "source": "@hyperframes/shader-transitions",
+      "registry_block": "thermal-distortion",
+      "title": "Thermal distortion",
+      "when_to_use": "Heat/tension buildup release; subtle compared to glitch, good for mid-energy beats.",
+      "default_duration_sec": 0.7,
+      "energy": "medium"
+    }
+  ],
+  "sfx": [
+    {
+      "id": "sfx_whoosh",
+      "asset_id": "sfx_whoosh",
+      "path": "assets/sfx/whoosh.mp3",
+      "duration_sec": 0.6,
+      "character": "Fast motion; pair with whip-pan, hard_cut energy spikes, or scene enters.",
+      "when_to_use": "Meaningful cut with visible transition; section start."
+    },
+    {
+      "id": "sfx_ding",
+      "asset_id": "sfx_ding",
+      "path": "assets/sfx/ding.mp3",
+      "duration_sec": 0.4,
+      "character": "Bright confirmation; checklist item, correct answer, small win.",
+      "when_to_use": "Stat reveal, punchline landing, or motion graphic resolve."
+    },
+    {
+      "id": "sfx_impact",
+      "asset_id": "sfx_impact",
+      "path": "assets/sfx/impact.mp3",
+      "duration_sec": 0.9,
+      "character": "Heavy hit; dramatic emphasis.",
+      "when_to_use": "flash-through-white, cinematic-zoom, or full-screen graphic slam."
+    },
+    {
+      "id": "sfx_pop",
+      "asset_id": "sfx_pop",
+      "path": "assets/sfx/pop.mp3",
+      "duration_sec": 0.3,
+      "character": "Light UI pop; element appears.",
+      "when_to_use": "Lower-third, callout, or half-screen graphic entrance."
+    },
+    {
+      "id": "sfx_click",
+      "asset_id": "sfx_click",
+      "path": "assets/sfx/click.mp3",
+      "duration_sec": 0.2,
+      "character": "UI click; tight and subtle.",
+      "when_to_use": "Button/toggle metaphor, quick beat, or cut without heavy transition."
+    }
+  ],
+  "motion_graphic_templates": [
+    {
+      "id": "matrix-stat-card",
+      "coverage": "half",
+      "title": "Matrix stat card",
+      "description": "Glass panel over matrix/Three.js rain; one bold number + label animates in.",
+      "status": "planned",
+      "spec_doc": "motiongraphicdesign.md",
+      "reference_registry_blocks": ["vfx-liquid-background", "data-chart"]
+    },
+    {
+      "id": "glass-quote-fullscreen",
+      "coverage": "full",
+      "title": "Glass quote fullscreen",
+      "description": "Full-frame glassmorphism quote with kinetic typography; speaker line or pull quote.",
+      "status": "planned",
+      "spec_doc": "motiongraphicdesign.md",
+      "reference_registry_blocks": ["macos-tahoe-liquid-glass", "liquid-glass-notification"]
+    },
+    {
+      "id": "concept-diagram-half",
+      "coverage": "half",
+      "title": "Concept diagram (half screen)",
+      "description": "Animated flow/diagram beside talking head; nodes and connectors reveal in sync with speech.",
+      "status": "planned",
+      "spec_doc": "motiongraphicdesign.md",
+      "reference_registry_blocks": ["flowchart"]
+    },
+    {
+      "id": "matrix-rain-background-full",
+      "coverage": "full",
+      "title": "Matrix rain background (full screen)",
+      "description": "Three.js or canvas matrix rain behind bold headline; high-concept, not generic lower-third.",
+      "status": "planned",
+      "spec_doc": "motiongraphicdesign.md",
+      "reference_registry_blocks": ["vfx-liquid-background", "caption-matrix-decode"]
+    },
+    {
+      "id": "kinetic-headline-full",
+      "coverage": "full",
+      "title": "Kinetic headline (full screen)",
+      "description": "Full-screen single phrase with slam/wipe entrance; GSAP-driven, bold type.",
+      "status": "planned",
+      "spec_doc": "motiongraphicdesign.md",
+      "reference_registry_blocks": ["caption-kinetic-slam", "kinetic-type"]
+    },
+    {
+      "id": "glass-lower-third-half",
+      "coverage": "half",
+      "title": "Glass lower third (half screen)",
+      "description": "Frosted bar with name/title/ stat; occupies lower half only, never a floating chip.",
+      "status": "planned",
+      "spec_doc": "motiongraphicdesign.md",
+      "reference_registry_blocks": ["yt-lower-third", "liquid-glass-notification"]
+    }
+  ],
+  "registry_notes": {
+    "shader_demo_blocks": "Individual shader previews install via hyperframes add <name> (e.g. flash-through-white). Runtime per-cut transitions use shader IDs from @hyperframes/shader-transitions, not registry block names.",
+    "shader_name_mismatches": {
+      "domain-warp": "registry block is domain-warp-dissolve",
+      "chromatic-split": "registry block is chromatic-radial-split"
+    },
+    "showcase_galleries_not_per_cut": [
+      "transitions-3d",
+      "transitions-blur",
+      "transitions-cover",
+      "transitions-destruction",
+      "transitions-dissolve",
+      "transitions-distortion",
+      "transitions-grid",
+      "transitions-light",
+      "transitions-mechanical",
+      "transitions-other",
+      "transitions-push",
+      "transitions-radial",
+      "transitions-scale"
+    ],
+    "showcase_galleries_note": "Gallery blocks demo many CSS/GSAP transitions in one composition. They are NOT selectable per-cut shader IDs today. Do not add to transitions[] until wired.",
+    "verification": {
+      "verified_at": "2026-06-07",
+      "shader_transitions": {
+        "source": "packages/shader-transitions/src/shaders/registry.ts → SHADER_NAMES",
+        "count": 14,
+        "ids": [
+          "domain-warp",
+          "ridged-burn",
+          "whip-pan",
+          "sdf-iris",
+          "ripple-waves",
+          "gravitational-lens",
+          "cinematic-zoom",
+          "chromatic-split",
+          "glitch",
+          "swirl-vortex",
+          "thermal-distortion",
+          "flash-through-white",
+          "cross-warp-morph",
+          "light-leak"
+        ],
+        "catalog_transitions_shader_entries": 14,
+        "all_match": true,
+        "dropped": []
+      },
+      "transition_registry_blocks": {
+        "all_14_registry_blocks_exist_in_catalog_cli": true
+      },
+      "reference_registry_blocks": {
+        "vfx-liquid-background": "exists (block)",
+        "data-chart": "exists (block)",
+        "macos-tahoe-liquid-glass": "exists (block)",
+        "liquid-glass-notification": "exists (block)",
+        "flowchart": "exists (block)",
+        "caption-matrix-decode": "exists (component)",
+        "caption-kinetic-slam": "exists (component)",
+        "yt-lower-third": "exists (block)",
+        "kinetic-type": "in registry.json as hyperframes:example only — NOT in hyperframes catalog / hyperframes add; use init --example. Treat as inspiration reference, not installable block."
+      },
+      "motion_graphic_template_ids": "All six template ids (matrix-stat-card, etc.) are to-build sub-agent archetypes — none exist as registry items."
+    }
+  }
+}

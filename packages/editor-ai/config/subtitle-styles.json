@@ -1,0 +1,48 @@
+{
+  "$schema": "subtitle-styles-menu-v1",
+  "default": "hormozi_serifpop",
+  "spec_doc": "subtitlesguide.md",
+  "note": "User-facing picker. CLI prints this list; --subtitle-style <id> selects one. Pixel specs live in subtitlesguide.md. No id passed -> 'default' (never random). Each style is distinct on font + layout + motion, not just color.",
+  "styles": [
+    {
+      "id": "hormozi_serifpop",
+      "name": "Amber Serif-Pop",
+      "description": "Bold white sans with one glowing amber italic-serif word per line. Build-up reveal, alternates top / mid-low. The trendy elegant look.",
+      "distinct_by": "two fonts (sans + glowing italic serif), build-up stack, zone alternation",
+      "vibe": "trendy, premium, elegant",
+      "preview": "WHITE bold + one *amber italic* glowing word"
+    },
+    {
+      "id": "hormozi_classic",
+      "name": "Hormozi Classic",
+      "description": "Ultra-heavy Montserrat 900 ALL-CAPS, thick black stroke, active word highlights yellow as spoken. Fixed mid-low, centered. The benchmark business look — the boldest style.",
+      "distinct_by": "Montserrat 900 caps + 8px black stroke + active-word yellow highlight, fixed position",
+      "vibe": "loud, authoritative, business",
+      "preview": "HEAVY WHITE CAPS, active word turns [YELLOW]"
+    },
+    {
+      "id": "pill_box",
+      "name": "Pill Box",
+      "description": "Each word sits in its own solid rounded pill; active word's pill turns the accent color. No stroke. Clean on any background. Fixed mid-low.",
+      "distinct_by": "per-word pill backgrounds (no stroke), active-pill color swap",
+      "vibe": "clean, modern, high-readability",
+      "preview": "words in [black pills], active word in [amber pill]"
+    },
+    {
+      "id": "beat_bounce",
+      "name": "Beat Bounce",
+      "description": "Tall condensed Bebas Neue, ONE giant word at a time dead-center, springy squash-stretch bounce per word. Max energy.",
+      "distinct_by": "one huge word at a time, center, spring squash-stretch motion",
+      "vibe": "hype, fast, punchy",
+      "preview": "ONE BIG WORD bouncing in, center screen"
+    },
+    {
+      "id": "karaoke_sweep",
+      "name": "Karaoke Sweep",
+      "description": "Full phrase visible, dimmed; a color fill sweeps left-to-right across each word in time with speech. Calm, steady, readable. Fixed mid-low.",
+      "distinct_by": "full phrase shown, left-to-right color sweep tracks speech",
+      "vibe": "calm, educational, steady",
+      "preview": "dim phrase, color sweeps word by word"
+    }
+  ]
+}

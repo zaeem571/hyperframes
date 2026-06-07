@@ -14,6 +14,45 @@
 
 export const SCHEMA_VERSION = "1";
 
+/** Bump when editor-in-chief EDL shape changes (folded into analyzeEdits cache key). */
+export const EDITOR_SCHEMA_VERSION = "4";
+
+/** Transition IDs from config/catalog.json — keep in sync when catalog changes. */
+export const CATALOG_TRANSITION_IDS = [
+  "hard_cut",
+  "flash-through-white",
+  "whip-pan",
+  "glitch",
+  "light-leak",
+  "cinematic-zoom",
+  "sdf-iris",
+  "domain-warp",
+  "cross-warp-morph",
+  "ridged-burn",
+  "ripple-waves",
+  "gravitational-lens",
+  "chromatic-split",
+  "swirl-vortex",
+  "thermal-distortion",
+] as const;
+
+export const CATALOG_SFX_ASSET_IDS = [
+  "sfx_whoosh",
+  "sfx_ding",
+  "sfx_impact",
+  "sfx_pop",
+  "sfx_click",
+] as const;
+
+export const CATALOG_MOTION_GRAPHIC_TEMPLATE_IDS = [
+  "matrix-stat-card",
+  "glass-quote-fullscreen",
+  "concept-diagram-half",
+  "matrix-rain-background-full",
+  "kinetic-headline-full",
+  "glass-lower-third-half",
+] as const;
+
 export const EDL_RESPONSE_SCHEMA = {
   type: "OBJECT",
   properties: {
@@ -74,11 +113,27 @@ export const EDL_RESPONSE_SCHEMA = {
           end: { type: "NUMBER" },
           reason: {
             type: "STRING",
-            enum: ["silence", "filler_word", "mistake", "dead_air", "redundant"],
+            enum: [
+              "filler",
+              "false_start",
+              "repeat",
+              "dead_air",
+              "tangent",
+              "silence",
+              "filler_word",
+              "mistake",
+              "redundant",
+            ],
+          },
+          transition_id: {
+            type: "STRING",
+            description:
+              "Catalog transition at the join after this cut is removed. Default hard_cut.",
+            enum: [...CATALOG_TRANSITION_IDS],
           },
         },
         required: ["start", "end"],
-        propertyOrdering: ["start", "end", "reason"],
+        propertyOrdering: ["start", "end", "reason", "transition_id"],
       },
     },
     punch_ins: {
@@ -151,14 +206,89 @@ export const EDL_RESPONSE_SCHEMA = {
         type: "OBJECT",
         properties: {
           time: { type: "NUMBER" },
-          asset_id: { type: "STRING", description: "Must exist in the asset manifest." },
+          asset_id: {
+            type: "STRING",
+            description: "Must exist in the asset manifest / catalog sfx.",
+            enum: [...CATALOG_SFX_ASSET_IDS],
+          },
           volume: { type: "NUMBER", description: "0..1, default 1." },
         },
         required: ["time", "asset_id"],
         propertyOrdering: ["time", "asset_id", "volume"],
       },
     },
+    motion_graphic_requests: {
+      type: "ARRAY",
+      description:
+        "Delegated motion-graphic jobs for the sub-agent. Requests only — no inline HTML.",
+      items: {
+        type: "OBJECT",
+        properties: {
+          start: { type: "NUMBER" },
+          end: { type: "NUMBER" },
+          template_id: {
+            type: "STRING",
+            enum: [...CATALOG_MOTION_GRAPHIC_TEMPLATE_IDS],
+          },
+          coverage: { type: "STRING", enum: ["half", "full"] },
+          scene_context: {
+            type: "STRING",
+            description:
+              "Meaning at this beat: words spoken, what to communicate, verbatim label. No icons, layout, or visual treatment.",
+          },
+          headline: {
+            type: "STRING",
+            description: "Primary verbatim text to render on the graphic.",
+          },
+        },
+        required: ["start", "end", "template_id", "coverage", "scene_context"],
+        propertyOrdering: ["start", "end", "template_id", "coverage", "scene_context", "headline"],
+      },
+    },
   },
   required: ["source_duration", "style_decisions", "cuts", "punch_ins", "graphics", "sfx"],
   propertyOrdering: ["source_duration", "style_decisions", "cuts", "punch_ins", "graphics", "sfx"],
+} as const;
+
+/** Agentic editor-in-chief schema — extends EDL with motion_graphic_requests. */
+export const EDITOR_EDL_RESPONSE_SCHEMA = {
+  ...EDL_RESPONSE_SCHEMA,
+  required: [
+    "source_duration",
+    "style_decisions",
+    "cuts",
+    "punch_ins",
+    "graphics",
+    "sfx",
+    "motion_graphic_requests",
+  ],
+  propertyOrdering: [
+    "source_duration",
+    "style_decisions",
+    "cuts",
+    "punch_ins",
+    "graphics",
+    "sfx",
+    "motion_graphic_requests",
+  ],
+} as const;
+
+/**
+ * Editor-in-chief orchestrator schema — style + motion_graphic_requests only.
+ * Cuts, punch_ins, and sfx come from Stage A/B upstream.
+ */
+export const EDITOR_ORCHESTRATOR_RESPONSE_SCHEMA = {
+  type: "OBJECT",
+  properties: {
+    source_duration: EDL_RESPONSE_SCHEMA.properties.source_duration,
+    style_decisions: EDL_RESPONSE_SCHEMA.properties.style_decisions,
+    graphics: {
+      type: "ARRAY",
+      description: "Always empty — captions are transcript-driven.",
+      items: EDL_RESPONSE_SCHEMA.properties.graphics.items,
+    },
+    motion_graphic_requests: EDL_RESPONSE_SCHEMA.properties.motion_graphic_requests,
+  },
+  required: ["source_duration", "style_decisions", "graphics", "motion_graphic_requests"],
+  propertyOrdering: ["source_duration", "style_decisions", "graphics", "motion_graphic_requests"],
 } as const;
